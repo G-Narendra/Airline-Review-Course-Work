@@ -92,6 +92,15 @@ $$WLI_{Score} = (W_1 \cdot NPS_{Score}) + (W_2 \cdot Sentiment_{Depth}) + (W_3 \
 
 ---
 
+## Engineering Decisions & Challenges Solved
+
+| Challenge | Decision | Why |
+|---|---|---|
+| Mixed-language reviews (Arabic + English) | Language detection + separate sentiment pipelines per language | Arabic sentiment models differ from English ones; mixing them degrades accuracy |
+| Noisy customer reviews with slang, typos, emojis | Text cleaning pipeline: lowercase, special char removal, lemmatization | Raw review text is extremely noisy — cleaning improves signal-to-noise ratio for the classifier |
+| Feature importance not obvious from raw text | TF-IDF vectorization with n-grams (unigram + bigram) | Bigrams capture phrases like "not good" that unigrams miss — critical for sentiment accuracy |
+| Different airlines have different review distributions | Per-airline baseline comparison before aggregated analysis | Comparing Emirates to a budget airline without normalizing for service tier is misleading |
+
 ## 👨‍💻 Author
 
 **Narendra Gandikota (G‑Narendra)** AI | ML | Python | GenAI Enthusiast  
