@@ -1,108 +1,110 @@
 # ✈️ Airline Customer Loyalty Prediction & WLI
-### AI-Driven Loyalty Intelligence & Strategic Service Recovery
 
-<p align="center">
-<img src="https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python">
-<img src="https://img.shields.io/badge/LightGBM-Efficiency-EB912E?style=for-the-badge">
-<img src="https://img.shields.io/badge/NLP-Sentiment%20Analysis-8E44AD?style=for-the-badge">
-<img src="https://img.shields.io/badge/Metric-WLI%20Index-00A8E8?style=for-the-badge">
-<img src="https://img.shields.io/badge/Framework-Scikit--Learn-F7931E?style=for-the-badge&logo=scikitlearn">
-</p>
+**Multi-model classification for airline loyalty prediction with Weighted Loyalty Index (WLI) calculation.**
+
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
+[![LightGBM](https://img.shields.io/badge/LightGBM-EB912E.svg)](https://lightgbm.readthedocs.io/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-2EAD33.svg)](https://xgboost.readthedocs.io/)
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ---
 
-## 📌 Project Overview
+## 🎯 Problem Statement
 
-Customer loyalty is the ultimate differentiator in the aviation industry. Traditional metrics like NPS often fail to capture the "Why" behind passenger behavior. 
+Airlines collect thousands of customer reviews but struggle to quantify loyalty beyond simple star ratings. A 5-star review from a frequent business traveler carries different weight than a 5-star review from a one-time tourist. Existing loyalty metrics (NPS, CSAT) treat all reviews equally and miss the nuanced relationship between service quality, sentiment depth, and actual loyalty behavior.
 
-This project introduces a scalable **Loyalty Intelligence System** that predicts promoter behavior and generates a unified **Weighted Loyalty Index (WLI)**. By blending machine learning with sentiment depth, it converts subjective reviews into actionable strategic insights.
-
----
-
-## ⭐ Key Innovation: Weighted Loyalty Index (WLI)
-
-The **WLI** is a multi-dimensional KPI designed to offer a 360-degree view of passenger loyalty:
-
-$$WLI_{Score} = (W_1 \cdot NPS_{Score}) + (W_2 \cdot Sentiment_{Depth}) + (W_3 \cdot Service_{Actionability})$$
-
-### 🔹 Component Breakdown:
-* **NPS Score (0–1):** Normalized rating derived from the 10-point scale.
-* **Sentiment Depth:** Measures emotional quality using Cabin Staff Service (CSS) and Inflight Entertainment (IE).
-* **Service Actionability:** Feature-weighted diagnostic using **LightGBM** importance scores.
+The challenge is to build a predictive model that classifies customer loyalty and derives a Weighted Loyalty Index (WLI) that captures three dimensions: NPS-like score (overall rating), sentiment depth (emotional engagement), and service actionability (which service aspects drive loyalty most).
 
 ---
 
-## 📂 Dataset Summary
+## 📊 What I Built
 
-**Source:** Airline Industry Reviews (Kaggle) | **Records:** 23,171
+A complete ML pipeline with model comparison and loyalty index calculation:
 
-| Feature | Description | Type |
-| :--- | :--- | :--- |
-| **Overall Rating** | 1–10 passenger rating | Numeric |
-| **Review** | Full text feedback (Sentiment source) | Text |
-| **Service Ratings** | 1-5 stars (Seat, Food, Wifi, etc.) | Float |
-| **Recommended** | Binary Target (Promoter proxy) | Boolean |
+1. **Data Loading**: Load airline review dataset from Google Colab
+2. **Text Preprocessing**: TF-IDF vectorization with n-grams (1,2), stopwords removal, lemmatization
+3. **Hybrid Feature Engineering**: Combine text features (TF-IDF) + categorical features (OneHotEncoder) + service rating columns
+4. **Model Training**: Compare 3 models:
+   - **LightGBM** (primary, used for WLI weights)
+   - **Logistic Regression** (baseline)
+   - **XGBoost** (alternative)
+5. **WLI Calculation**: Use LightGBM feature importance as weights for Service_Actionability component
+6. **Time Series Analysis**: Monthly WLI trend analysis
+7. **Insight Extraction**: Top 20 predictors from feature importance
 
----
+### Key Results
 
-## 🛠️ Methodology
-
-### 1️⃣ Data Engineering
-* **Cleaning:** Missing value imputation and standardization of service ratings.
-* **Text Processing:** Tokenization, Lemmatization, and TF-IDF Vectorization for review analysis.
-
-### 2️⃣ Hybrid Feature Engineering
-
-
-[Image of machine learning feature engineering process]
-
-* Integration of **Metadata** (Seat Type, Traveller Type), **Numerical Ratings**, and **Text Vectors** into a unified feature matrix.
-
-### 3️⃣ Model Architecture
-* **Champion Model:** LightGBM Classifier.
-* **Objective:** Maximize prediction accuracy and extract feature importance for WLI weighting.
+| Model | Purpose |
+|---|---|
+| **LightGBM** | Primary model, used to derive WLI weights via feature importance |
+| **Logistic Regression** | Baseline comparison |
+| **XGBoost** | Alternative ensemble comparison |
 
 ---
 
-## 📊 Model Evaluation
+## 🛠️ Tech Stack
 
-| Metric | Score |
-| :--- | :--- |
-| **Precision (Promoters)** | **0.94** |
-| **Recall (Promoters)** | **0.94** |
-| **F1-Score** | **0.94** |
-| **Overall Accuracy** | **0.96** |
-
----
-
-## 🔍 Key Insights
-
-* **⚠️ Data Integrity:** "Missing Seat Type" emerged as the largest loyalty risk factor.
-* **💬 Emotional Drivers:** Keywords like *excellent* and *great* are high-confidence predictors of promoters, while *worst* and *hour* signal immediate churn risk.
-* **✨ Service Quality:** Cabin Staff Service (CSS) has the highest correlation with high WLI scores.
+| Component | Technology |
+|---|---|
+| **Language** | Python 3.9+ |
+| **Data Processing** | Pandas, NumPy |
+| **NLP** | NLTK (stopwords, lemmatization), TF-IDF |
+| **ML Frameworks** | LightGBM, XGBoost, Scikit-Learn |
+| **Visualization** | Matplotlib, Seaborn |
+| **Environment** | Google Colab |
 
 ---
 
-## 🚀 Strategic Recommendations
+## 📁 Project Structure
 
-1.  **Fix Data Gaps:** Audit missing "Seat Type" entries to improve loyalty tracking accuracy.
-2.  **Reinforce Positives:** Use the model to identify "Promoter Behaviors" and train staff to replicate them.
-3.  **Real-Time Recovery:** Deploy the classifier to flag negative reviews instantly for customer service follow-up.
-4.  **Resource Allocation:** Use WLI to prioritize investments in service areas with the highest "Actionability" weight.
+```
+Airline-Review-Course-Work/
+├── AirLines Review Code.ipynb      # Main notebook with full pipeline
+├── README.md
+└── LICENSE
+```
 
 ---
 
-## Engineering Decisions & Challenges Solved
+## 🔧 How to Run
 
-| Challenge | Decision | Why |
-|---|---|---|
-| Mixed-language reviews (Arabic + English) | Language detection + separate sentiment pipelines per language | Arabic sentiment models differ from English ones; mixing them degrades accuracy |
-| Noisy customer reviews with slang, typos, emojis | Text cleaning pipeline: lowercase, special char removal, lemmatization | Raw review text is extremely noisy — cleaning improves signal-to-noise ratio for the classifier |
-| Feature importance not obvious from raw text | TF-IDF vectorization with n-grams (unigram + bigram) | Bigrams capture phrases like "not good" that unigrams miss — critical for sentiment accuracy |
-| Different airlines have different review distributions | Per-airline baseline comparison before aggregated analysis | Comparing Emirates to a budget airline without normalizing for service tier is misleading |
+```bash
+# Install dependencies
+pip install pandas numpy scikit-learn lightgbm xgboost nltk
 
-## 👨‍💻 Author
+# Run in Google Colab (recommended for Google Drive integration)
+# Or locally:
+jupyter notebook "AirLines Review Code.ipynb"
+```
 
-**Narendra Gandikota (G‑Narendra)** AI | ML | Python | GenAI Enthusiast  
+---
 
-GitHub: [https://github.com/G-Narendra](https://github.com/G-Narendra)
+## 🧪 Engineering Decisions
+
+| Decision | Rationale |
+|---|---|
+| **LightGBM as primary model** | Faster training, handles mixed feature types well, provides feature importance for WLI calculation |
+| **Hybrid feature engineering** | Combines text (TF-IDF) + categorical (OneHot) + numerical (service ratings) for richer signal |
+| **TF-IDF with n-grams (1,2)** | Captures both unigrams and bigrams for better text representation |
+| **WLI as weighted sum** | Three equal weights (NPS, Sentiment, Service) provide interpretable loyalty metric |
+| **Feature importance as WLI weights** | Data-driven weights rather than arbitrary assumptions — model tells us which services matter most |
+
+---
+
+## ⚠️ Limitations
+
+- **No cross-validation**: Uses single train/test split (80/20)
+- **No confidence intervals**: Model predictions lack uncertainty quantification
+- **Google Drive dependency**: Data loading requires Google Drive mount
+- **Limited to airline domain**: WLI calculation is specific to airline service metrics
+- **No temporal validation**: Time series analysis doesn't use walk-forward validation
+
+---
+
+## ⚠️ Disclaimer
+
+This is an educational project for learning ML concepts. It is not intended for production use in airline operations.
+
+---
+
+*Built as part of MSc Data Science coursework — demonstrating multi-model comparison and custom loyalty index calculation.*
